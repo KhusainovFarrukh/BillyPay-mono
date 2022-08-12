@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username).orElseThrow(
+        return userRepository.findByPhoneNumber(username).orElseThrow(
             () -> new UsernameNotFoundException("User not found in the database")
         );
     }
@@ -72,19 +72,6 @@ public class UserServiceImpl implements UserService {
     public AppUser getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(
             () -> new ResourceNotFoundException("User", "id", id)
-        );
-    }
-
-    /**
-     * If the user exists, return the user, otherwise throw an exception.
-     *
-     * @param email The email of the user to retrieve
-     * @return The userRepository.findByEmail(email) is being returned.
-     */
-    @Override
-    public AppUser getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(
-            () -> new ResourceNotFoundException("User", "email", email)
         );
     }
 

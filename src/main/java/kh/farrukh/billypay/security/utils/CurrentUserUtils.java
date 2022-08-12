@@ -48,9 +48,9 @@ public class CurrentUserUtils {
      * @return The user that is currently logged in.
      */
     public static AppUser getCurrentUser(UserRepository userRepository) {
-        String email = getEmail();
-        return userRepository.findByEmail(email).orElseThrow(
-            () -> new ResourceNotFoundException("User", "email", email)
+        String phoneNumber = getPhoneNumber();
+        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(
+            () -> new ResourceNotFoundException("User", "phone number", phoneNumber)
         );
     }
 
@@ -59,7 +59,7 @@ public class CurrentUserUtils {
      *
      * @return The email of the user that is currently logged in.
      */
-    private static String getEmail() {
+    private static String getPhoneNumber() {
         try {
             Object principal = SecurityContextHolder.getContext()
                 .getAuthentication()

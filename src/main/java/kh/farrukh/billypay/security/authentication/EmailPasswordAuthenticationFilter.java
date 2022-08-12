@@ -5,7 +5,7 @@ import kh.farrukh.billypay.apis.auth.AuthResponse;
 import kh.farrukh.billypay.apis.auth.LoginRequest;
 import kh.farrukh.billypay.apis.user.AppUser;
 import kh.farrukh.billypay.apis.user.UserRepository;
-import kh.farrukh.billypay.global.exception.custom.exceptions.EmailPasswordWrongException;
+import kh.farrukh.billypay.global.exception.custom.exceptions.PhoneNumberPasswordWrongException;
 import kh.farrukh.billypay.security.authorization.TokenProvider;
 import kh.farrukh.billypay.security.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +57,7 @@ public class EmailPasswordAuthenticationFilter extends UsernamePasswordAuthentic
             throw new AuthenticationServiceException(e.getMessage(), e);
         }
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
+                new UsernamePasswordAuthenticationToken(loginRequest.getPhoneNumber(), loginRequest.getPassword());
         return authenticationManager.authenticate(authenticationToken);
     }
 
@@ -72,7 +72,7 @@ public class EmailPasswordAuthenticationFilter extends UsernamePasswordAuthentic
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
         UserDetails user = (UserDetails) authentication.getPrincipal();
-        AppUser appUser = userRepository.findByEmail(user.getUsername()).orElseThrow(
+        AppUser appUser = userRepository.findByPhoneNumber(user.getUsername()).orElseThrow(
                 () -> new UsernameNotFoundException("User not found in the database")
         );
         AuthResponse authResponse = tokenProvider.generateTokens(appUser);
@@ -82,12 +82,12 @@ public class EmailPasswordAuthenticationFilter extends UsernamePasswordAuthentic
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         LoginRequest loginRequest = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
-        EmailPasswordWrongException.Type type;
-        if (userRepository.existsByEmail(loginRequest.getEmail())) {
-            type = EmailPasswordWrongException.Type.PASSWORD;
+        PhoneNumberPasswordWrongException.Type type;
+        if (userRepository.existsByPhoneNumber(loginRequest.getPhoneNumber())) {
+            type = PhoneNumberPasswordWrongException.Type.PASSWORD;
         } else {
-            type = EmailPasswordWrongException.Type.EMAIL;
+            type = PhoneNumberPasswordWrongException.Type.PHONE_NUMBER;
         }
-        resolver.resolveException(request, response, null, new EmailPasswordWrongException(type));
+        resolver.resolveException(request, response, null, new PhoneNumberPasswordWrongException(type));
     }
 }

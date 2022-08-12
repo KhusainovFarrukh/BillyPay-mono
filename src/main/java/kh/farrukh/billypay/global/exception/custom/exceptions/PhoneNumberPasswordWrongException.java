@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-import static kh.farrukh.billypay.global.exception.ExceptionMessages.EXCEPTION_EMAIL_PASSWORD_WRONG;
+import static kh.farrukh.billypay.global.exception.ExceptionMessages.EXCEPTION_PHONE_NUMBER_PASSWORD_WRONG;
 
 /**
  * `EmailPasswordInvalidException` is a subclass of `ApiException` that is thrown
@@ -15,15 +15,15 @@ import static kh.farrukh.billypay.global.exception.ExceptionMessages.EXCEPTION_E
  * HttpStatus of the response will be UNAUTHORIZED
  */
 @Getter
-public class EmailPasswordWrongException extends ApiException {
+public class PhoneNumberPasswordWrongException extends ApiException {
 
     private final Type errorType;
 
-    public EmailPasswordWrongException(Type errorType) {
+    public PhoneNumberPasswordWrongException(Type errorType) {
         super(
             String.format("%s is wrong", errorType.errorName),
             HttpStatus.UNAUTHORIZED,
-            EXCEPTION_EMAIL_PASSWORD_WRONG,
+            EXCEPTION_PHONE_NUMBER_PASSWORD_WRONG,
             new Object[]{errorType.errorName}
         );
         this.errorType = errorType;
@@ -33,7 +33,7 @@ public class EmailPasswordWrongException extends ApiException {
     @AllArgsConstructor
     @NoArgsConstructor
     public enum Type {
-        EMAIL("Email"),
+        PHONE_NUMBER("Phone number"),
         PASSWORD("Password");
 
         private String errorName;

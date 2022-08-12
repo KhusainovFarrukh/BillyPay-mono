@@ -14,8 +14,6 @@ public interface UserService extends UserDetailsService {
 
     AppUser getUserById(Long id);
 
-    AppUser getUserByEmail(String email);
-
     AppUser addUser(AppUserDTO appUserDto);
 
     AppUser updateUser(long id, AppUserDTO appUserDto);

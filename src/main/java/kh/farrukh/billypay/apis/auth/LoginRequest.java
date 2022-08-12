@@ -1,5 +1,6 @@
 package kh.farrukh.billypay.apis.auth;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequest {
-    private String email;
+    @JsonProperty("phone_number")
+    private String phoneNumber;
     private String password;
 }
