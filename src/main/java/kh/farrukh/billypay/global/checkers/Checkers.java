@@ -3,6 +3,7 @@ package kh.farrukh.billypay.global.checkers;
 
 import kh.farrukh.billypay.apis.bill.BillRepository;
 import kh.farrukh.billypay.apis.image.ImageRepository;
+import kh.farrukh.billypay.apis.stats.StatsRepository;
 import kh.farrukh.billypay.apis.user.AppUserDTO;
 import kh.farrukh.billypay.apis.user.UserRepository;
 import kh.farrukh.billypay.global.exception.custom.exceptions.BadRequestException;
@@ -68,6 +69,12 @@ public class Checkers {
     public static void checkBillId(BillRepository billRepository, long id) {
         if (!billRepository.existsById(id)) {
             throw new ResourceNotFoundException("Bill", "id", id);
+        }
+    }
+
+    public static void checkStatsId(StatsRepository statsRepository, long id) {
+        if (!statsRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Stats", "id", id);
         }
     }
 }

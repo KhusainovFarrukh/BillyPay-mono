@@ -21,13 +21,13 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public PagingResponse<Bill> getBills(Long ownerId, int page, int pageSize) {
+        checkPageNumber(page);
         if (ownerId == null && CurrentUserUtils.isAdmin(userRepository)) {
             return new PagingResponse<>(billRepository.findAll(
                 PageRequest.of(page - 1, pageSize))
             );
         } else if (ownerId != null && CurrentUserUtils.isAdminOrAuthor(ownerId, userRepository)) {
             checkUserId(userRepository, ownerId);
-            checkPageNumber(page);
             return new PagingResponse<>(billRepository.findAllByOwner_Id(
                 ownerId, PageRequest.of(page - 1, pageSize)
             ));

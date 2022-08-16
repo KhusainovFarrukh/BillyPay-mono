@@ -2,6 +2,7 @@ package kh.farrukh.billypay.apis.bill;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import kh.farrukh.billypay.apis.stats.Stats;
 import kh.farrukh.billypay.apis.user.AppUser;
 import kh.farrukh.billypay.apis.user.UserRepository;
 import kh.farrukh.billypay.global.base.entities.EntityWithId;
@@ -13,6 +14,8 @@ import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static kh.farrukh.billypay.apis.bill.Constants.SEQUENCE_NAME_BILL_ID;
 import static kh.farrukh.billypay.apis.bill.Constants.TABLE_NAME_BILL;
@@ -40,6 +43,10 @@ public class Bill extends EntityWithId {
     @JsonIgnoreProperties("bills")
     @ManyToOne(optional = false)
     private AppUser owner;
+
+    @JsonIgnoreProperties("bill")
+    @OneToMany(mappedBy = "bill")
+    private List<Stats> stats = new ArrayList<>();
 
     public Bill(BillDTO billDTO, UserRepository userRepository) {
         BeanUtils.copyProperties(billDTO, this);
