@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static kh.farrukh.billypay.apis.auth.Constants.*;
+import static kh.farrukh.billypay.apis.bill.Constants.SECURITY_ENDPOINT_BILL;
 import static kh.farrukh.billypay.apis.image.Constants.ENDPOINT_IMAGE;
 import static kh.farrukh.billypay.apis.user.Constants.ENDPOINT_USER;
 import static kh.farrukh.billypay.apis.user.Constants.SECURITY_ENDPOINT_USER_ROLE;
@@ -60,6 +61,13 @@ public class SecurityConfig {
             .antMatchers(HttpMethod.PUT, withChildEndpoints(ENDPOINT_USER)).hasAnyAuthority(UserRole.ADMIN.name(), UserRole.SUPER_ADMIN.name())
             .antMatchers(HttpMethod.PATCH, withChildEndpoints(ENDPOINT_USER)).hasAnyAuthority(UserRole.ADMIN.name(), UserRole.SUPER_ADMIN.name())
             .antMatchers(HttpMethod.DELETE, withChildEndpoints(ENDPOINT_USER)).hasAnyAuthority(UserRole.SUPER_ADMIN.name())
+            //bill endpoints
+            .antMatchers(HttpMethod.GET, withChildEndpoints(SECURITY_ENDPOINT_BILL)).hasAnyAuthority(UserRole.USER.name(), UserRole.ADMIN.name(), UserRole.SUPER_ADMIN.name())
+            .antMatchers(HttpMethod.PATCH, withChildEndpoints(SECURITY_ENDPOINT_BILL)).hasAnyAuthority(UserRole.USER.name(), UserRole.ADMIN.name(), UserRole.SUPER_ADMIN.name())
+            .antMatchers(HttpMethod.PUT, withChildEndpoints(SECURITY_ENDPOINT_BILL)).hasAnyAuthority(UserRole.USER.name(), UserRole.ADMIN.name(), UserRole.SUPER_ADMIN.name())
+            .antMatchers(HttpMethod.PATCH, withChildEndpoints(SECURITY_ENDPOINT_BILL)).hasAnyAuthority(UserRole.USER.name(), UserRole.ADMIN.name(), UserRole.SUPER_ADMIN.name())
+            .antMatchers(HttpMethod.DELETE, withChildEndpoints(SECURITY_ENDPOINT_BILL)).hasAnyAuthority(UserRole.USER.name(), UserRole.ADMIN.name(), UserRole.SUPER_ADMIN.name())
+
             //auth endpoints
             .antMatchers(
                 withChildEndpoints(ENDPOINT_SIGN_UP),

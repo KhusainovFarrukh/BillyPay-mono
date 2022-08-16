@@ -1,9 +1,11 @@
 package kh.farrukh.billypay.apis.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import kh.farrukh.billypay.apis.auth.SignUpRequest;
+import kh.farrukh.billypay.apis.bill.Bill;
 import kh.farrukh.billypay.apis.image.Image;
 import kh.farrukh.billypay.apis.image.ImageRepository;
 import kh.farrukh.billypay.global.base.entities.EntityWithId;
@@ -18,8 +20,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import static kh.farrukh.billypay.apis.user.Constants.SEQUENCE_NAME_USER_ID;
 import static kh.farrukh.billypay.apis.user.Constants.TABLE_NAME_USER;
@@ -37,6 +41,7 @@ import static kh.farrukh.billypay.global.base.entities.EntityWithId.GENERATOR_NA
         @UniqueConstraint(name = "uk_app_user_email", columnNames = "email"),
         @UniqueConstraint(name = "uk_app_user_phone_number", columnNames = "phone_number")
     })
+@NamedEntityGraph(name = "app_user_with_bills", attributeNodes = @NamedAttributeNode(value = "bills"))
 public class AppUser extends EntityWithId implements UserDetails {
 
     private String name;
@@ -68,6 +73,10 @@ public class AppUser extends EntityWithId implements UserDetails {
         foreignKey = @ForeignKey(name = "fk_image_id_of_app_user")
     )
     private Image image;
+
+    @JsonIgnoreProperties("owner")
+    @OneToMany(mappedBy = "owner")
+    private List<Bill> bills = new ArrayList<>();
 
     public AppUser(AppUserDTO appUserDto, ImageRepository imageRepository) {
         this.name = appUserDto.getName();

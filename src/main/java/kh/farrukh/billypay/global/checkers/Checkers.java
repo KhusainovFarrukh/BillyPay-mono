@@ -1,6 +1,7 @@
 package kh.farrukh.billypay.global.checkers;
 
 
+import kh.farrukh.billypay.apis.bill.BillRepository;
 import kh.farrukh.billypay.apis.image.ImageRepository;
 import kh.farrukh.billypay.apis.user.AppUserDTO;
 import kh.farrukh.billypay.apis.user.UserRepository;
@@ -61,6 +62,12 @@ public class Checkers {
         }
         if (userRepository.existsByEmail(appUserDto.getEmail())) {
             throw new DuplicateResourceException("User", "email", appUserDto.getEmail());
+        }
+    }
+
+    public static void checkBillId(BillRepository billRepository, long id) {
+        if (!billRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Bill", "id", id);
         }
     }
 }
