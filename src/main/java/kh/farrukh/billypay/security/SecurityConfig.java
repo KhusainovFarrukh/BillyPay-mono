@@ -59,8 +59,8 @@ public class SecurityConfig {
             //user endpoints
             .antMatchers(HttpMethod.GET, withChildEndpoints(ENDPOINT_USER)).permitAll()
             .antMatchers(HttpMethod.PATCH, withChildEndpoints(SECURITY_ENDPOINT_USER_ROLE)).hasAnyAuthority(UserRole.SUPER_ADMIN.name())
-            .antMatchers(HttpMethod.PUT, withChildEndpoints(ENDPOINT_USER)).hasAnyAuthority(UserRole.ADMIN.name(), UserRole.SUPER_ADMIN.name())
-            .antMatchers(HttpMethod.PATCH, withChildEndpoints(ENDPOINT_USER)).hasAnyAuthority(UserRole.ADMIN.name(), UserRole.SUPER_ADMIN.name())
+            .antMatchers(HttpMethod.PUT, withChildEndpoints(ENDPOINT_USER)).hasAnyAuthority(UserRole.USER.name(), UserRole.ADMIN.name(), UserRole.SUPER_ADMIN.name())
+            .antMatchers(HttpMethod.PATCH, withChildEndpoints(ENDPOINT_USER)).hasAnyAuthority(UserRole.USER.name(), UserRole.ADMIN.name(), UserRole.SUPER_ADMIN.name())
             .antMatchers(HttpMethod.DELETE, withChildEndpoints(ENDPOINT_USER)).hasAnyAuthority(UserRole.SUPER_ADMIN.name())
             //bill endpoints
             .antMatchers(HttpMethod.GET, withChildEndpoints(ENDPOINT_BILL)).hasAnyAuthority(UserRole.USER.name(), UserRole.ADMIN.name(), UserRole.SUPER_ADMIN.name())

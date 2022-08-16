@@ -20,11 +20,6 @@ public class AppUserDTO {
     @JsonProperty("phone_number")
     private String phoneNumber;
 
-    private String password;
-
-    @Enumerated(EnumType.STRING)
-    private UserRole role = UserRole.USER;
-
     @JsonProperty("image_id")
     private Long imageId;
 }
