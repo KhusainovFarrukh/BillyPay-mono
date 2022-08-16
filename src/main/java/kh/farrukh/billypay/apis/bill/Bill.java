@@ -41,7 +41,10 @@ public class Bill extends EntityWithId {
     @ManyToOne(optional = false)
     private AppUser owner;
 
-    public Bill(BillDTO billDTO) {
+    public Bill(BillDTO billDTO, UserRepository userRepository) {
         BeanUtils.copyProperties(billDTO, this);
+        this.owner = userRepository.findById(billDTO.getOwnerId()).orElseThrow(
+            () -> new ResourceNotFoundException("User", "id", billDTO.getOwnerId())
+        );
     }
 }

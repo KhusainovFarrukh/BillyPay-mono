@@ -15,4 +15,6 @@ public class BillDTO {
     private String accountNumber;
     private BillType type;
     private Double price;
+    @JsonProperty("owner_id")
+    private Long ownerId;
 }

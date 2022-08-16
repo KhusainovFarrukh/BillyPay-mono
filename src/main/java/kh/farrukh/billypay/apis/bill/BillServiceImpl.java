@@ -9,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import static kh.farrukh.billypay.global.checkers.Checkers.*;
+import static kh.farrukh.billypay.global.checkers.Checkers.checkPageNumber;
+import static kh.farrukh.billypay.global.checkers.Checkers.checkUserId;
 
 @Service
 @RequiredArgsConstructor
@@ -19,12 +20,16 @@ public class BillServiceImpl implements BillService {
     private final UserRepository userRepository;
 
     @Override
-    public PagingResponse<Bill> getBills(long userId, int page, int pageSize) {
-        if (CurrentUserUtils.isAdminOrAuthor(userId, userRepository)) {
-            checkUserId(userRepository, userId);
+    public PagingResponse<Bill> getBills(Long ownerId, int page, int pageSize) {
+        if (ownerId == null && CurrentUserUtils.isAdmin(userRepository)) {
+            return new PagingResponse<>(billRepository.findAll(
+                PageRequest.of(page - 1, pageSize))
+            );
+        } else if (ownerId != null && CurrentUserUtils.isAdminOrAuthor(ownerId, userRepository)) {
+            checkUserId(userRepository, ownerId);
             checkPageNumber(page);
             return new PagingResponse<>(billRepository.findAllByOwner_Id(
-                userId, PageRequest.of(page - 1, pageSize)
+                ownerId, PageRequest.of(page - 1, pageSize)
             ));
         } else {
             throw new NotEnoughPermissionException();
@@ -32,57 +37,52 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public Bill getBillById(long userId, long id) {
-        if (CurrentUserUtils.isAdminOrAuthor(userId, userRepository)) {
-            checkUserId(userRepository, userId);
-            return billRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Bill", "id", id)
-            );
-        } else {
+    public Bill getBillById(long id) {
+        Bill bill = billRepository.findById(id).orElseThrow(
+            () -> new ResourceNotFoundException("Bill", "id", id)
+        );
+        if (!CurrentUserUtils.isAdminOrAuthor(bill.getOwner().getId(), userRepository)) {
             throw new NotEnoughPermissionException();
         }
+        return bill;
     }
 
     @Override
-    public Bill addBill(long userId, BillDTO billDto) {
-        if (CurrentUserUtils.isAdminOrAuthor(userId, userRepository)) {
-            Bill bill = new Bill(billDto);
-            bill.setOwner(userRepository.findById(userId).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", userId))
-            );
-            return billRepository.save(bill);
-        } else {
+    public Bill addBill(BillDTO billDto) {
+        if (!CurrentUserUtils.isAdminOrAuthor(billDto.getOwnerId(), userRepository)) {
             throw new NotEnoughPermissionException();
         }
+        return billRepository.save(new Bill(billDto, userRepository));
     }
 
     @Override
-    public Bill updateBill(long userId, long id, BillDTO billDto) {
-        if (CurrentUserUtils.isAdminOrAuthor(userId, userRepository)) {
-            checkUserId(userRepository, userId);
-            Bill existingBill = billRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Bill", "id", id)
-            );
+    public Bill updateBill(long id, BillDTO billDto) {
+        Bill existingBill = billRepository.findById(id).orElseThrow(
+            () -> new ResourceNotFoundException("Bill", "id", id)
+        );
 
-            existingBill.setAddress(billDto.getAddress());
-            existingBill.setAccountNumber(billDto.getAccountNumber());
-            existingBill.setType(billDto.getType());
-            existingBill.setPrice(billDto.getPrice());
-
-            return billRepository.save(existingBill);
-        } else {
+        if (!CurrentUserUtils.isAdminOrAuthor(existingBill.getOwner().getId(), userRepository)) {
             throw new NotEnoughPermissionException();
         }
+
+        existingBill.setAddress(billDto.getAddress());
+        existingBill.setAccountNumber(billDto.getAccountNumber());
+        existingBill.setType(billDto.getType());
+        existingBill.setPrice(billDto.getPrice());
+
+        return billRepository.save(existingBill);
     }
 
     @Override
-    public void deleteBillById(long userId, long id) {
-        if (CurrentUserUtils.isAdminOrAuthor(userId, userRepository)) {
-            checkUserId(userRepository, userId);
-            checkBillId(billRepository, id);
-            billRepository.deleteById(id);
-        } else {
+    public void deleteBillById(long id) {
+        Bill bill = billRepository.findById(id).orElseThrow(
+            () -> new ResourceNotFoundException("Bill", "id", id)
+        );
+
+        if (!CurrentUserUtils.isAdminOrAuthor(bill.getOwner().getId(), userRepository)) {
             throw new NotEnoughPermissionException();
         }
+
+        billRepository.deleteById(id);
     }
 }

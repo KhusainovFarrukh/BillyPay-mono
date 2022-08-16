@@ -19,41 +19,38 @@ public class BillController {
 
     @GetMapping
     public ResponseEntity<PagingResponse<Bill>> getBills(
-        @PathVariable long userId,
+        @RequestParam(name = "owner_id", required = false) Long ownerId,
         @RequestParam(name = "page", defaultValue = "1") int page,
         @RequestParam(name = "page_size", defaultValue = "10") int pageSize
     ) {
-        return new ResponseEntity<>(billService.getBills(userId, page, pageSize), HttpStatus.OK);
+        return new ResponseEntity<>(billService.getBills(ownerId, page, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<Bill> getBillById(
-        @PathVariable long userId,
         @PathVariable long id
     ) {
-        return new ResponseEntity<>(billService.getBillById(userId, id), HttpStatus.OK);
+        return new ResponseEntity<>(billService.getBillById(id), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Bill> addBill(
-        @PathVariable long userId,
         @Valid @RequestBody BillDTO billDto
     ) {
-        return new ResponseEntity<>(billService.addBill(userId, billDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(billService.addBill(billDto), HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
     public ResponseEntity<Bill> updateBill(
-        @PathVariable long userId,
         @PathVariable long id,
         @Valid @RequestBody BillDTO billDto
     ) {
-        return new ResponseEntity<>(billService.updateBill(userId, id, billDto), HttpStatus.OK);
+        return new ResponseEntity<>(billService.updateBill(id, billDto), HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteBill(@PathVariable long userId, @PathVariable long id) {
-        billService.deleteBillById(userId, id);
+    public ResponseEntity<Void> deleteBill(@PathVariable long id) {
+        billService.deleteBillById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
