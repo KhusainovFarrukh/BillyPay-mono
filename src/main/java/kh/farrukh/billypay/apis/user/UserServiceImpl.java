@@ -75,6 +75,13 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    @Override
+    public AppUser getUserByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(
+            () -> new ResourceNotFoundException("User", "phone number", phoneNumber)
+        );
+    }
+
     /**
      * Creates a new AppUser object, encodes the password, and saves the user
      *

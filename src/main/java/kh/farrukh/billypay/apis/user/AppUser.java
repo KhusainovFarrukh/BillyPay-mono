@@ -71,6 +71,7 @@ public class AppUser extends EntityWithId implements UserDetails {
         this.name = appUserDto.getName();
         this.email = appUserDto.getEmail();
         this.password = appUserDto.getPassword();
+        this.phoneNumber = appUserDto.getPhoneNumber();
         this.role = appUserDto.getRole();
         this.image = imageRepository.findById(appUserDto.getImageId()).orElseThrow(
             () -> new ResourceNotFoundException("Image", "id", appUserDto.getImageId())

@@ -98,7 +98,7 @@ public class TokenProvider implements InitializingBean {
      */
     private String createToken(AppUser user, Date expireDate, Algorithm algorithm) {
         return JWT.create()
-            .withSubject(user.getUsername())
+            .withSubject(user.getPhoneNumber())
             .withExpiresAt(expireDate)
             .withClaim(KEY_ROLE, user.getRole().name())
             .sign(algorithm);
