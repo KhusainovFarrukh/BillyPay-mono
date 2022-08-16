@@ -1,5 +1,9 @@
 package kh.farrukh.billypay.apis.auth;
 
+import com.auth0.jwt.exceptions.AlgorithmMismatchException;
+import com.auth0.jwt.exceptions.InvalidClaimException;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import kh.farrukh.billypay.apis.image.ImageRepository;
 import kh.farrukh.billypay.apis.user.AppUser;
@@ -7,6 +11,10 @@ import kh.farrukh.billypay.apis.user.UserRepository;
 import kh.farrukh.billypay.global.exception.custom.exceptions.BadRequestException;
 import kh.farrukh.billypay.global.exception.custom.exceptions.PhoneNumberPasswordWrongException;
 import kh.farrukh.billypay.global.exception.custom.exceptions.ResourceNotFoundException;
+import kh.farrukh.billypay.global.exception.custom.exceptions.token_exceptions.ExpiredTokenException;
+import kh.farrukh.billypay.global.exception.custom.exceptions.token_exceptions.InvalidRoleTokenException;
+import kh.farrukh.billypay.global.exception.custom.exceptions.token_exceptions.InvalidSignatureTokenException;
+import kh.farrukh.billypay.global.exception.custom.exceptions.token_exceptions.WrongTypeTokenException;
 import kh.farrukh.billypay.security.authorization.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,6 +62,14 @@ public class AuthServiceImpl implements AuthService {
             } else {
                 throw new BadRequestException("Refresh token");
             }
+        } catch (AlgorithmMismatchException exception) {
+            throw new WrongTypeTokenException();
+        } catch (SignatureVerificationException exception) {
+            throw new InvalidSignatureTokenException();
+        } catch (TokenExpiredException exception) {
+            throw new ExpiredTokenException();
+        } catch (InvalidClaimException exception) {
+            throw new InvalidRoleTokenException();
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new BadRequestException("Refresh token");
