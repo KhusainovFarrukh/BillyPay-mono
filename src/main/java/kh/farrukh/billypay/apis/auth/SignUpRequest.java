@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegistrationRequest {
+public class SignUpRequest {
     private String name;
     private String email;
     @JsonProperty("phone_number")

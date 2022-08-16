@@ -20,10 +20,8 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static kh.farrukh.billypay.apis.auth.Constants.ENDPOINT_REFRESH_TOKEN;
-import static kh.farrukh.billypay.apis.auth.Constants.ENDPOINT_REGISTRATION;
+import static kh.farrukh.billypay.apis.auth.Constants.*;
 import static kh.farrukh.billypay.apis.image.Constants.ENDPOINT_IMAGE;
-import static kh.farrukh.billypay.security.authentication.EmailPasswordAuthenticationFilter.ENDPOINT_LOGIN;
 
 /**
  * If the request is not for the login or refresh token endpoints, then decode the JWT and set the authentication in the
@@ -49,10 +47,10 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         // simple user request for getting list of languages/frameworks/reviews, then don't check JWT token.
 
         return // register request
-            request.getRequestURI().equals(ENDPOINT_REGISTRATION) ||
+            request.getRequestURI().equals(ENDPOINT_SIGN_UP) ||
 
                 // login request
-                request.getRequestURI().equals(ENDPOINT_LOGIN) ||
+                request.getRequestURI().equals(ENDPOINT_SIGN_IN) ||
 
                 // refresh token request
                 request.getRequestURI().equals(ENDPOINT_REFRESH_TOKEN) ||

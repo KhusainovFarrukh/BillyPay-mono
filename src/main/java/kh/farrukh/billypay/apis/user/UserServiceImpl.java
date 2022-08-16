@@ -75,27 +75,6 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    @Override
-    public AppUser getUserByPhoneNumber(String phoneNumber) {
-        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(
-            () -> new ResourceNotFoundException("User", "phone number", phoneNumber)
-        );
-    }
-
-    /**
-     * Creates a new AppUser object, encodes the password, and saves the user
-     *
-     * @param appUserDto The DTO object that contains the user's information.
-     * @return The created user.
-     */
-    @Override
-    public AppUser addUser(AppUserDTO appUserDto) {
-        checkUserIsUnique(userRepository, appUserDto);
-        AppUser appUser = new AppUser(appUserDto, imageRepository);
-        appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
-        return userRepository.save(appUser);
-    }
-
     /**
      * If the username or email is different from the existing one, check if it exists in the database. If it does, throw
      * an exception. If it doesn't, update the user

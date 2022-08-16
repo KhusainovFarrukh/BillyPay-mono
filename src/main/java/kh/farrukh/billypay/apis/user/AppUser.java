@@ -3,6 +3,7 @@ package kh.farrukh.billypay.apis.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import kh.farrukh.billypay.apis.auth.SignUpRequest;
 import kh.farrukh.billypay.apis.image.Image;
 import kh.farrukh.billypay.apis.image.ImageRepository;
 import kh.farrukh.billypay.global.base.entities.EntityWithId;
@@ -14,6 +15,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -75,6 +77,17 @@ public class AppUser extends EntityWithId implements UserDetails {
         this.role = appUserDto.getRole();
         this.image = imageRepository.findById(appUserDto.getImageId()).orElseThrow(
             () -> new ResourceNotFoundException("Image", "id", appUserDto.getImageId())
+        );
+    }
+
+    public AppUser(SignUpRequest signUpRequest, PasswordEncoder passwordEncoder, ImageRepository imageRepository) {
+        this.name = signUpRequest.getName();
+        this.email = signUpRequest.getEmail();
+        this.phoneNumber = signUpRequest.getPhoneNumber();
+        this.password = passwordEncoder.encode(signUpRequest.getPassword());
+        this.role = UserRole.USER;
+        this.image = imageRepository.findById(signUpRequest.getImageId()).orElseThrow(
+            () -> new ResourceNotFoundException("Image", "id", signUpRequest.getImageId())
         );
     }
 

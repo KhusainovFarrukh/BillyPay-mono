@@ -1,15 +1,12 @@
 package kh.farrukh.billypay.apis.auth;
 
-import kh.farrukh.billypay.apis.user.AppUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static kh.farrukh.billypay.apis.auth.Constants.ENDPOINT_REFRESH_TOKEN;
-import static kh.farrukh.billypay.apis.auth.Constants.ENDPOINT_REGISTRATION;
-import static kh.farrukh.billypay.security.authentication.EmailPasswordAuthenticationFilter.ENDPOINT_LOGIN;
+import static kh.farrukh.billypay.apis.auth.Constants.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,14 +14,14 @@ public class AuthController {
 
     private final AuthService authService;
 
-/*    @PostMapping(ENDPOINT_LOGIN)
-    public ResponseEntity<AuthResponse> signIn(@RequestBody LoginRequest loginRequest) {
-        return new ResponseEntity<>(authService.signIn(loginRequest), HttpStatus.OK);
-    }*/
+    @PostMapping(ENDPOINT_SIGN_IN)
+    public ResponseEntity<AuthResponse> signIn(@RequestBody SignInRequest signInRequest) {
+        return new ResponseEntity<>(authService.signIn(signInRequest), HttpStatus.OK);
+    }
 
-    @PostMapping(ENDPOINT_REGISTRATION)
-    public ResponseEntity<AppUser> signUp(@RequestBody RegistrationRequest registrationRequest) {
-        return new ResponseEntity<>(authService.signUp(registrationRequest), HttpStatus.OK);
+    @PostMapping(ENDPOINT_SIGN_UP)
+    public ResponseEntity<AuthResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
+        return new ResponseEntity<>(authService.signUp(signUpRequest), HttpStatus.OK);
     }
 
     @GetMapping(ENDPOINT_REFRESH_TOKEN)

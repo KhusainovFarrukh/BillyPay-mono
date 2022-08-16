@@ -4,9 +4,9 @@ import kh.farrukh.billypay.apis.user.AppUser;
 
 public interface AuthService {
 
-//    AuthResponse signIn(LoginRequest loginRequest);
+    AuthResponse signIn(SignInRequest signInRequest);
 
-    AppUser signUp(RegistrationRequest registrationRequest);
+    AuthResponse signUp(SignUpRequest signUpRequest);
 
     AuthResponse refreshToken(String tokenHeader);
 
