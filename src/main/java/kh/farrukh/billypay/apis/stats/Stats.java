@@ -16,6 +16,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 import static kh.farrukh.billypay.apis.stats.Constants.SEQUENCE_NAME_STATS_ID;
@@ -31,14 +32,17 @@ import static kh.farrukh.billypay.global.base.entities.EntityWithId.GENERATOR_NA
 @SequenceGenerator(name = GENERATOR_NAME, sequenceName = SEQUENCE_NAME_STATS_ID)
 public class Stats extends EntityWithId {
 
+    @NotNull
     @JsonProperty("start_date")
     private LocalDate startDate;
 
     @JsonProperty("end_date")
     private LocalDate endDate;
 
+    @NotNull
     private Double amount;
 
+    @NotNull
     @JsonProperty("total_price")
     private Double totalPrice;
 

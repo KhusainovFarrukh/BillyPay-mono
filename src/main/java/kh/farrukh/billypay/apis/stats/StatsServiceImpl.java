@@ -3,6 +3,7 @@ package kh.farrukh.billypay.apis.stats;
 import kh.farrukh.billypay.apis.bill.Bill;
 import kh.farrukh.billypay.apis.bill.BillRepository;
 import kh.farrukh.billypay.apis.user.UserRepository;
+import kh.farrukh.billypay.global.exception.custom.exceptions.BadRequestException;
 import kh.farrukh.billypay.global.exception.custom.exceptions.NotEnoughPermissionException;
 import kh.farrukh.billypay.global.exception.custom.exceptions.ResourceNotFoundException;
 import kh.farrukh.billypay.global.paging.PagingResponse;
@@ -12,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import static kh.farrukh.billypay.global.checkers.Checkers.checkPageNumber;
-import static kh.farrukh.billypay.global.checkers.Checkers.checkStatsId;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +58,9 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public Stats addStats(StatsDTO statsDto) {
+        if (statsDto.getBillId() == null) {
+            throw new BadRequestException("Bill ID");
+        }
         Bill bill = billRepository.findById(statsDto.getBillId()).orElseThrow(
             () -> new ResourceNotFoundException("Bill", "id", statsDto.getBillId())
         );
