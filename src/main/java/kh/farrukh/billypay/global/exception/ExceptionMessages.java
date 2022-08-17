@@ -17,4 +17,5 @@ public class ExceptionMessages {
     public static final String EXCEPTION_TOKEN_INVALID_SIGNATURE = "message.exception.invalid_signature";
     public static final String EXCEPTION_TOKEN_WRONG_TYPE = "message.exception.token_wrong_type";
     public static final String EXCEPTION_TOKEN_UNKNOWN = "message.exception.token_unknown";
+    public static final String EXCEPTION_METHOD_ARGUMENT_NOT_VALID = "message.exception.method_argument_not_valid";
 }

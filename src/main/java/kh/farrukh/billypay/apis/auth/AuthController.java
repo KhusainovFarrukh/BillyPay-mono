@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 import static kh.farrukh.billypay.apis.auth.Constants.*;
 
 @RestController
@@ -15,12 +17,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping(ENDPOINT_SIGN_IN)
-    public ResponseEntity<AuthResponse> signIn(@RequestBody SignInRequest signInRequest) {
+    public ResponseEntity<AuthResponse> signIn(@Valid @RequestBody SignInRequest signInRequest) {
         return new ResponseEntity<>(authService.signIn(signInRequest), HttpStatus.OK);
     }
 
     @PostMapping(ENDPOINT_SIGN_UP)
-    public ResponseEntity<AuthResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<AuthResponse> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         return new ResponseEntity<>(authService.signUp(signUpRequest), HttpStatus.OK);
     }
 

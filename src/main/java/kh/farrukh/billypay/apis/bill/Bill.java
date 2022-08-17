@@ -45,7 +45,7 @@ public class Bill extends EntityWithId {
     private AppUser owner;
 
     @JsonIgnoreProperties("bill")
-    @OneToMany(mappedBy = "bill")
+    @OneToMany(mappedBy = "bill", orphanRemoval = true)
     private List<Stats> stats = new ArrayList<>();
 
     public Bill(BillDTO billDTO, UserRepository userRepository) {

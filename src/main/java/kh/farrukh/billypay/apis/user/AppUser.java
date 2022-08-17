@@ -37,13 +37,11 @@ import static kh.farrukh.billypay.global.base.entities.EntityWithId.GENERATOR_NA
 @Entity
 @SequenceGenerator(name = GENERATOR_NAME, sequenceName = SEQUENCE_NAME_USER_ID)
 @Table(name = TABLE_NAME_USER,
-    uniqueConstraints = {
-        @UniqueConstraint(name = "uk_app_user_email", columnNames = "email"),
-        @UniqueConstraint(name = "uk_app_user_phone_number", columnNames = "phone_number")
-    })
+    uniqueConstraints = @UniqueConstraint(name = "uk_app_user_phone_number", columnNames = "phone_number"))
 @NamedEntityGraph(name = "app_user_with_bills", attributeNodes = @NamedAttributeNode(value = "bills"))
 public class AppUser extends EntityWithId implements UserDetails {
 
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
@@ -75,7 +73,7 @@ public class AppUser extends EntityWithId implements UserDetails {
     private Image image;
 
     @JsonIgnoreProperties("owner")
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", orphanRemoval = true)
     private List<Bill> bills = new ArrayList<>();
 
     public AppUser(SignUpRequest signUpRequest, PasswordEncoder passwordEncoder, ImageRepository imageRepository) {

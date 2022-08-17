@@ -9,6 +9,7 @@ import kh.farrukh.billypay.apis.image.ImageRepository;
 import kh.farrukh.billypay.apis.user.AppUser;
 import kh.farrukh.billypay.apis.user.UserRepository;
 import kh.farrukh.billypay.global.exception.custom.exceptions.BadRequestException;
+import kh.farrukh.billypay.global.exception.custom.exceptions.DuplicateResourceException;
 import kh.farrukh.billypay.global.exception.custom.exceptions.PhoneNumberPasswordWrongException;
 import kh.farrukh.billypay.global.exception.custom.exceptions.ResourceNotFoundException;
 import kh.farrukh.billypay.global.exception.custom.exceptions.token_exceptions.ExpiredTokenException;
@@ -43,6 +44,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse signUp(SignUpRequest signUpRequest) {
+        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+            throw new DuplicateResourceException("User", "email", signUpRequest.getEmail());
+        }
+        if (userRepository.existsByPhoneNumber(signUpRequest.getPhoneNumber())) {
+            throw new DuplicateResourceException("User", "phone number", signUpRequest.getPhoneNumber());
+        }
         AppUser user = userRepository.save(new AppUser(signUpRequest, passwordEncoder, imageRepository));
         AuthResponse authResponse = tokenProvider.generateTokens(user);
         authResponse.setUser(user);

@@ -54,7 +54,7 @@ public class UserController {
      * @return A ResponseEntity with the updated AppUser object and HttpStatus.
      */
     @PutMapping("{id}")
-    public ResponseEntity<AppUser> updateUser(@PathVariable long id, @RequestBody AppUserDTO appUserDto) {
+    public ResponseEntity<AppUser> updateUser(@PathVariable long id, @Valid @RequestBody AppUserDTO appUserDto) {
         return new ResponseEntity<>(userService.updateUser(id, appUserDto), HttpStatus.OK);
     }
 
