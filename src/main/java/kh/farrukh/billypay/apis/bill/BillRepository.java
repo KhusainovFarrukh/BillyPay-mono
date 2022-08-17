@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface BillRepository extends JpaRepository<Bill, Long> {
 
     Page<Bill> findAllByOwner_Id(long ownerId, Pageable pageable);
+
+    boolean existsByAccountNumber(String accountNumber);
 }

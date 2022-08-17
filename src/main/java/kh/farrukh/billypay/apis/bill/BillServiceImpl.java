@@ -1,6 +1,8 @@
 package kh.farrukh.billypay.apis.bill;
 
 import kh.farrukh.billypay.apis.user.UserRepository;
+import kh.farrukh.billypay.global.exception.custom.exceptions.BadRequestException;
+import kh.farrukh.billypay.global.exception.custom.exceptions.DuplicateResourceException;
 import kh.farrukh.billypay.global.exception.custom.exceptions.NotEnoughPermissionException;
 import kh.farrukh.billypay.global.exception.custom.exceptions.ResourceNotFoundException;
 import kh.farrukh.billypay.global.paging.PagingResponse;
@@ -49,8 +51,14 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public Bill addBill(BillDTO billDto) {
+        if (billDto.getOwnerId() == null) {
+            throw new BadRequestException("Owner ID");
+        }
         if (!CurrentUserUtils.isAdminOrAuthor(billDto.getOwnerId(), userRepository)) {
             throw new NotEnoughPermissionException();
+        }
+        if (billRepository.existsByAccountNumber(billDto.getAccountNumber())) {
+            throw new DuplicateResourceException("Bill", "account number", billDto.getAccountNumber());
         }
         return billRepository.save(new Bill(billDto, userRepository));
     }
@@ -63,6 +71,11 @@ public class BillServiceImpl implements BillService {
 
         if (!CurrentUserUtils.isAdminOrAuthor(existingBill.getOwner().getId(), userRepository)) {
             throw new NotEnoughPermissionException();
+        }
+
+        if (!billDto.getAccountNumber().equals(existingBill.getAccountNumber()) &&
+            billRepository.existsByAccountNumber(billDto.getAccountNumber())) {
+            throw new DuplicateResourceException("Bill", "account number", billDto.getAccountNumber());
         }
 
         existingBill.setAddress(billDto.getAddress());

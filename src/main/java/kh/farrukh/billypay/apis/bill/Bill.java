@@ -14,6 +14,7 @@ import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,8 @@ import static kh.farrukh.billypay.apis.bill.Constants.TABLE_NAME_BILL;
 import static kh.farrukh.billypay.global.base.entities.EntityWithId.GENERATOR_NAME;
 
 @Entity
-@Table(name = TABLE_NAME_BILL)
+@Table(name = TABLE_NAME_BILL,
+    uniqueConstraints = @UniqueConstraint(name = "uk_bill_account_number", columnNames = "account_number"))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -32,12 +34,16 @@ public class Bill extends EntityWithId {
 
     private String address;
 
+    @NotBlank
     @JsonProperty("account_number")
+    @Column(name = "account_number")
     private String accountNumber;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private BillType type;
 
+    @Column(nullable = false)
     private Double price;
 
     @JsonIgnoreProperties("bills")
